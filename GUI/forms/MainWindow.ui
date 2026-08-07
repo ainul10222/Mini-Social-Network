@@ -1,0 +1,11 @@
+<!--
+This file is NOT hand-written — you build it visually in Qt Creator's Design view.
+Skeleton placeholder for the UI file; create the real UI in Qt Designer.
+
+Suggested widgets (build visually):
+- A QLineEdit + QSpinBox (or two QLineEdits) for entering new user name + id, plus an "Add user" QPushButton.
+- Two QComboBoxes (populated from refreshUserList()) for picking two users, plus an "Add friendship" QPushButton.
+- A QComboBox for picking a single user, with buttons: "Show friends", "Run BFS", "Run DFS", "Suggest friends".
+- A second QComboBox pair + button for "Show mutual friends" (needs two users selected).
+- A QListWidget or QTextEdit as the shared output/results panel.
+-->

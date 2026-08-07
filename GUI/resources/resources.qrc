@@ -1,0 +1,8 @@
+<!--
+<!-- TODO: register any icons/images you use (optional).
+     Skeleton, empty for now: -->
+<RCC>
+  <qresource prefix="/icons">
+  </qresource>
+</RCC>
+-->
