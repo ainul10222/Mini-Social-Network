@@ -1,25 +1,28 @@
 #ifndef USER_H
 #define USER_H
 
-#include <string>
-using namespace std;
+#include <iostream>
 
-// Represents a single user (a vertex in the social graph).
-// Deliberately dumb — just holds data, no graph logic here.
 class User {
 public:
-    // Constructs a user with a unique id and display name.
-    User(int id, const string& name);
+    User();
+    User(int id, const char* name);
+    User(const User& other);
+    User& operator=(const User& other);
+    ~User();
 
-    // Returns the unique identifier of this user.
     int getId() const;
+    const char* getName() const;
 
-    // Returns the display name of this user.
-    string getName() const;
+    bool operator==(const User& other) const;
+    bool operator<(const User& other) const;
+    friend std::ostream& operator<<(std::ostream& out, const User& user);
 
 private:
     int id;
-    string name;
+    char* name;
+
+    void copyFrom(const User& other);
 };
 
-#endif // USER_H
+#endif

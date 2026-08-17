@@ -1,82 +1,275 @@
 #include "Graph.h"
-#include <queue>
-#include <set>
-#include <algorithm>
-using namespace std;
+#include "ArrayQueue.h"
+#include "ArrayStack.h"
 
-Graph::Graph() {
-    // Nothing to initialize — containers default-construct empty.
+
+Graph::Graph(int initialCapacity)
+    : users(nullptr), friends(nullptr), count(0),
+      capacity(initialCapacity < 1 ? 1 : initialCapacity) {
+    users = new User[capacity];
+    friends = new LinkedList<int>[capacity];
 }
 
-bool Graph::addUser(int id, const string& name) {
-    // TODO: if userExists(id), return false.
-    // Otherwise insert into `users` and create an empty entry in `adjacencyList`.
-    return false;
+Graph::Graph(const Graph& other) : users(nullptr), friends(nullptr), count(0), capacity(1) {
+    copyFrom(other);
 }
 
-bool Graph::removeUser(int id) {
-    // TODO: erase id from `users`.
-    // Then for every OTHER user, remove id from their adjacency list.
-    // Then erase id's own adjacency list entry.
-    return false;
+Graph& Graph::operator=(const Graph& other) {
+    if (this == &other) return *this;
+    destroy();
+    copyFrom(other);
+    return *this;
+}
+
+Graph::~Graph() {
+    destroy();
+}
+
+void Graph::destroy() {
+    delete[] users;
+    delete[] friends;
+    users = nullptr;
+    friends = nullptr;
+}
+
+void Graph::copyFrom(const Graph& other) {
+    capacity = other.capacity;
+    count = other.count;
+    users = new User[capacity];
+    friends = new LinkedList<int>[capacity];
+    for (int i = 0; i < count; i++) {
+        users[i] = other.users[i];
+        friends[i] = other.friends[i];
+    }
+}
+
+void Graph::resize(int newCapacity) {
+    User* biggerUsers = new User[newCapacity];
+    LinkedList<int>* biggerFriends = new LinkedList<int>[newCapacity];
+    for (int i = 0; i < count; i++) {
+        biggerUsers[i] = users[i];
+        biggerFriends[i] = friends[i];
+    }
+    delete[] users;
+    delete[] friends;
+    users = biggerUsers;
+    friends = biggerFriends;
+    capacity = newCapacity;
+}
+
+int Graph::findIndex(int id) const {
+    int lo = 0, hi = count - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (users[mid].getId() == id) return mid;
+        if (users[mid].getId() < id) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}
+
+int Graph::findInsertPos(int id) const {
+    int lo = 0, hi = count;
+    while (lo < hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (users[mid].getId() < id) lo = mid + 1;
+        else hi = mid;
+    }
+    return lo;
+}
+
+const User* Graph::findUser(int id) const {
+    int idx = findIndex(id);
+    return (idx == -1) ? nullptr : &users[idx];
 }
 
 bool Graph::userExists(int id) const {
-    // TODO: check if `users` contains this id.
-    return false;
+    return findIndex(id) != -1;
+}
+
+bool Graph::addUser(int id, const char* name) {
+    if (userExists(id)) return false;
+
+    if (count == capacity) {
+        resize(capacity * 2);
+    }
+
+    int pos = findInsertPos(id);
+    for (int i = count; i > pos; i--) {
+        users[i] = users[i - 1];
+        friends[i] = friends[i - 1];
+    }
+
+    users[pos] = User(id, name);
+    friends[pos] = LinkedList<int>();
+    count++;
+    return true;
+}
+
+bool Graph::removeUser(int id) {
+    int idx = findIndex(id);
+    if (idx == -1) return false;
+
+    for (int i = 0; i < count; i++) {
+        if (i != idx) friends[i].remove(id);
+    }
+
+    for (int i = idx; i < count - 1; i++) {
+        users[i] = users[i + 1];
+        friends[i] = friends[i + 1];
+    }
+    count--;
+    return true;
 }
 
 bool Graph::addFriendship(int id1, int id2) {
-    // TODO: check both users exist and aren't already friends.
-    // Push id2 into adjacencyList[id1] AND id1 into adjacencyList[id2].
-    return false;
+    if (id1 == id2)
+        return false;
+    int i1 = findIndex(id1);
+    int i2 = findIndex(id2);
+    if (i1 == -1 || i2 == -1)
+        return false;
+    if (friends[i1].contains(id2))
+     return false;
+
+    friends[i1].insertFront(id2);
+    friends[i2].insertFront(id1);
+    return true;
 }
 
 bool Graph::removeFriendship(int id1, int id2) {
-    // TODO: erase id2 from adjacencyList[id1]'s vector,
-    // AND erase id1 from adjacencyList[id2]'s vector.
-    return false;
+    int i1 = findIndex(id1);
+    int i2 = findIndex(id2);
+    if (i1 == -1 || i2 == -1) return false;
+
+    bool removed1 = friends[i1].remove(id2);
+    bool removed2 = friends[i2].remove(id1);
+    return removed1 && removed2;
 }
 
 bool Graph::areFriends(int id1, int id2) const {
-    // TODO: check if id2 appears in adjacencyList.at(id1)
-    return false;
+    int i1 = findIndex(id1);
+    int i2 = findIndex(id2);
+    if (i1 == -1 || i2 == -1) return false;
+    return friends[i1].contains(id2);
 }
 
-vector<int> Graph::bfsTraversal(int startId) const {
-    // TODO: classic BFS using queue and a set (or
-    // unordered_set) of visited ids. Push startId, mark visited,
-    // then repeatedly pop, record, and push unvisited neighbors.
-    return {};
+
+List<int> Graph::bfsTraversal(int startId) const {
+    List<int> order;
+    int startIdx = findIndex(startId);
+    if (startIdx == -1) return order;
+
+    bool* visited = new bool[capacity]();
+    ArrayQueue<int> q;
+
+    visited[startIdx] = true;
+    q.enqueue(startId);
+
+    while (!q.isEmpty()) {
+        int currentId = q.dequeue();
+        order.add(currentId);
+
+        int currentIdx = findIndex(currentId);
+        List<int> neighbors = friends[currentIdx].toList();
+        for (int i = 0; i < neighbors.size(); i++) {
+            int neighborId = neighbors[i];
+            int neighborIdx = findIndex(neighborId);
+            if (!visited[neighborIdx]) {
+                visited[neighborIdx] = true;
+                q.enqueue(neighborId);
+            }
+        }
+    }
+
+    delete[] visited;
+    return order;
 }
 
-vector<int> Graph::dfsTraversal(int startId) const {
-    // TODO: classic DFS. Can be done recursively (helper function)
-    // or iteratively with an explicit stack. Track visited
-    // the same way as BFS.
-    return {};
+List<int> Graph::dfsTraversal(int startId) const {
+    List<int> order;
+    if (!userExists(startId)) return order;
+
+    bool* visited = new bool[capacity]();
+    ArrayStack<int> s;
+
+    s.push(startId);
+
+    while (!s.isEmpty()) {
+        int currentId = s.pop();
+        int currentIdx = findIndex(currentId);
+
+        if (visited[currentIdx]) continue;
+        visited[currentIdx] = true;
+        order.add(currentId);
+
+        List<int> neighbors = friends[currentIdx].toList();
+        for (int i = 0; i < neighbors.size(); i++) {
+            int neighborId = neighbors[i];
+            int neighborIdx = findIndex(neighborId);
+            if (!visited[neighborIdx]) {
+                s.push(neighborId);
+            }
+        }
+    }
+
+    delete[] visited;
+    return order;
 }
 
-vector<int> Graph::getMutualFriends(int id1, int id2) const {
-    // TODO: get friends of id1, get friends of id2, return the
-    // intersection. set_intersection works well if both
-    // friend lists are sorted first.
-    return {};
+
+List<int> Graph::getMutualFriends(int id1, int id2) const {
+    List<int> result;
+    int i1 = findIndex(id1);
+    int i2 = findIndex(id2);
+    if (i1 == -1 || i2 == -1) return result;
+
+    List<int> f1 = friends[i1].toList();
+    List<int> f2 = friends[i2].toList();
+
+    for (int i = 0; i < f1.size(); i++) {
+        if (f2.contains(f1[i])) {
+            result.add(f1[i]);
+        }
+    }
+    return result;
 }
 
-vector<int> Graph::suggestFriends(int id, int maxSuggestions) const {
-    // TODO: run BFS from id but only go 2 levels deep.
-    // Collect users at exactly distance 2 (friends of friends)
-    // who are not already in adjacencyList[id]. Cap at maxSuggestions.
-    return {};
+List<int> Graph::suggestFriends(int id, int maxSuggestions) const {
+    List<int> result;
+    int idx = findIndex(id);
+    if (idx == -1) return result;
+
+    List<int> direct = friends[idx].toList();
+
+    for (int i = 0; i < direct.size() && result.size() < maxSuggestions; i++) {
+        int friendId = direct[i];
+        int friendIdx = findIndex(friendId);
+        List<int> friendOfFriend = friends[friendIdx].toList();
+
+        for (int j = 0; j < friendOfFriend.size() && result.size() < maxSuggestions; j++) {
+            int candidate = friendOfFriend[j];
+            if (candidate == id) continue;
+            if (direct.contains(candidate)) continue;
+            if (result.contains(candidate)) continue;
+            result.add(candidate);
+        }
+    }
+    return result;
 }
 
-vector<int> Graph::getFriends(int id) const {
-    // TODO: return adjacencyList.at(id) if it exists, else {}
-    return {};
+
+List<int> Graph::getFriends(int id) const {
+    int idx = findIndex(id);
+    if (idx == -1)
+        return List<int>();
+    return friends[idx].toList();
 }
 
-vector<User> Graph::getAllUsers() const {
-    // TODO: collect all values from the `users` map into a vector
-    return {};
+List<User> Graph::getAllUsers() const {
+    List<User> result(count > 0 ? count : 1);
+    for (int i = 0; i < count; i++) {
+        result.add(users[i]);
+    }
+    return result;
 }
