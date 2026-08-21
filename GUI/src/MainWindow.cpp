@@ -93,7 +93,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(profileFriendButton, &QPushButton::clicked, this, &MainWindow::onProfileFriendAction);
     connect(ui->showFriendsButton, &QPushButton::clicked, this, &MainWindow::onShowFriends);
     connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::onSearchUser);
-    connect(ui->friendTargetEdit, &QLineEdit::returnPressed, this, &MainWindow::onSearchUser);
+    connect(ui->friendTargetEdit, &QLineEdit::returnPressed, this, [this]() {
+        if (searchMode == SearchMode::MutualFriends) onShowMutualFriends();
+        else onSearchUser();
+    });
     connect(ui->friendTargetEdit, &QLineEdit::textChanged, this, [this](const QString&) { refreshUserSuggestions(); });
     connect(ui->bfsButton, &QPushButton::clicked, this, &MainWindow::onRunBFS);
     connect(ui->dfsButton, &QPushButton::clicked, this, &MainWindow::onRunDFS);
@@ -301,9 +304,16 @@ void MainWindow::onRunBFS() { showIds("BFS order: ", socialGraph.bfsTraversal(cu
 void MainWindow::onRunDFS() { showIds("DFS order: ", socialGraph.dfsTraversal(currentUserId)); }
 
 void MainWindow::onShowMutualFriends() {
+    if (searchMode != SearchMode::MutualFriends) {
+        openSearchMode(SearchMode::MutualFriends);
+        ui->friendTargetEdit->setPlaceholderText("Enter another user's name or UID...");
+        return;
+    }
+
     const int otherUserId = findUserId(ui->friendTargetEdit->text().trimmed());
     if (otherUserId == -1) { showStatus("No user found with that display name or UID."); return; }
     showIds("Mutual friends: ", socialGraph.getMutualFriends(currentUserId, otherUserId));
+    closeSearchMode();
 }
 
 void MainWindow::onSuggestFriends() {

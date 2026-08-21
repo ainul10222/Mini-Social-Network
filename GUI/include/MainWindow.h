@@ -46,7 +46,7 @@ private slots:
     void onLogout();
 
 private:
-    enum class SearchMode { None, SearchUser };
+    enum class SearchMode { None, SearchUser, MutualFriends };
 
     Ui::MainWindow *ui;
     Graph socialGraph;

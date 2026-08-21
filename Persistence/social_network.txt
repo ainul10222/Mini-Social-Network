@@ -1,8 +1,12 @@
 ACCOUNTS
 "Ainul" "123456" "ainul10222" 1
 "Ariful" "0987654321" "arif252" 2
+"MoyeMoye" "1234" "321" 3
 USERS
 1 "Ainul Huque"
 2 "Ariful Islam"
+3 "Moye Moye"
 FRIENDSHIPS
+1 3
 1 2
+2 3
