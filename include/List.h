@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+using namespace std;
 
 template <typename T>
 class List {
@@ -62,7 +63,7 @@ public:
     const T& operator[](int index) const { return data[index]; }
 
     template <typename U>
-    friend std::ostream& operator<<(std::ostream& out, const List<U>& list);
+    friend ostream& operator<<(ostream& out, const List<U>& list);
 
 private:
     T* data;
@@ -90,7 +91,7 @@ private:
 };
 
 template <typename U>
-std::ostream& operator<<(std::ostream& out, const List<U>& list) {
+ostream& operator<<(ostream& out, const List<U>& list) {
     out << "{ ";
     for (int i = 0; i < list.count; i++) {
         out << list.data[i];

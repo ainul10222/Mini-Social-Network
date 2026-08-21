@@ -5,17 +5,19 @@
 #include <sstream>
 #include <string>
 
-DataStore::DataStore(const std::string& fileName) : fileName(fileName) {}
+using namespace std;
 
-bool DataStore::save(const Graph& socialGraph, const std::vector<Account>& accounts) const {
-    std::ofstream output(fileName);
+DataStore::DataStore(const string& fileName) : fileName(fileName) {}
+
+bool DataStore::save(const Graph& socialGraph, const vector<Account>& accounts) const {
+    ofstream output(fileName);
     if (!output) return false;
 
     output << "ACCOUNTS\n";
     for (const Account& account : accounts) {
-        output << std::quoted(account.username) << ' '
-               << std::quoted(account.password) << ' '
-             << std::quoted(account.uid) << ' '
+                output << quoted(account.username) << ' '
+                             << quoted(account.password) << ' '
+                         << quoted(account.uid) << ' '
                << account.userId << '\n';
     }
 
@@ -23,7 +25,7 @@ bool DataStore::save(const Graph& socialGraph, const std::vector<Account>& accou
     List<User> users = socialGraph.getAllUsers();
     for (int index = 0; index < users.size(); index++) {
         output << users[index].getId() << ' '
-               << std::quoted(std::string(users[index].getName())) << '\n';
+               << quoted(string(users[index].getName())) << '\n';
     }
 
     output << "FRIENDSHIPS\n";
@@ -41,15 +43,15 @@ bool DataStore::save(const Graph& socialGraph, const std::vector<Account>& accou
     return true;
 }
 
-bool DataStore::load(Graph& socialGraph, std::vector<Account>& accounts, int& nextUserId) const {
-    std::ifstream input(fileName);
+bool DataStore::load(Graph& socialGraph, vector<Account>& accounts, int& nextUserId) const {
+    ifstream input(fileName);
     if (!input) return true;
 
-    std::string lineText;
+    string lineText;
     int section = 0;
     int highestUserId = 0;
 
-    while (std::getline(input, lineText)) {
+    while (getline(input, lineText)) {
         if (lineText == "ACCOUNTS") {
             section = 1;
             continue;
@@ -64,12 +66,12 @@ bool DataStore::load(Graph& socialGraph, std::vector<Account>& accounts, int& ne
         }
         if (lineText.empty()) continue;
 
-        std::istringstream line(lineText);
+        istringstream line(lineText);
         if (section == 1) {
             Account account;
-            if (line >> std::quoted(account.username)
-                     >> std::quoted(account.password)
-                     >> std::quoted(account.uid)
+            if (line >> quoted(account.username)
+                     >> quoted(account.password)
+                     >> quoted(account.uid)
                      >> account.userId) {
                 accounts.push_back(account);
             }
@@ -77,8 +79,8 @@ bool DataStore::load(Graph& socialGraph, std::vector<Account>& accounts, int& ne
             int firstValue;
             if (!(line >> firstValue)) continue;
 
-            std::string name;
-            if (line >> std::quoted(name)) {
+            string name;
+            if (line >> quoted(name)) {
                 if (socialGraph.addUser(firstValue, name.c_str()) && firstValue > highestUserId) {
                     highestUserId = firstValue;
                 }

@@ -1,6 +1,7 @@
 #ifndef ARRAYSTACK_H
 #define ARRAYSTACK_H
 
+using namespace std;
 
 template <typename T>
 class ArrayStack {

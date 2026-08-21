@@ -2,6 +2,7 @@
 #include "ArrayQueue.h"
 #include "ArrayStack.h"
 
+using namespace std;
 
 Graph::Graph(int initialCapacity)
     : users(nullptr), friends(nullptr), count(0),

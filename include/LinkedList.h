@@ -4,6 +4,7 @@
 #include <iostream>
 #include "List.h"
 
+using namespace std;
 
 template <typename T>
 class LinkedList {
@@ -116,11 +117,11 @@ public:
     }
 
     template <typename U>
-    friend std::ostream& operator<<(std::ostream& out, const LinkedList<U>& list);
+    friend ostream& operator<<(ostream& out, const LinkedList<U>& list);
 };
 
 template <typename U>
-std::ostream& operator<<(std::ostream& out, const LinkedList<U>& list) {
+ostream& operator<<(ostream& out, const LinkedList<U>& list) {
     out << "( ";
     typename LinkedList<U>::Node* cur = list.head;
     while (cur != nullptr) {

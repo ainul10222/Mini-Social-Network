@@ -11,6 +11,8 @@
 #include "DataStore.h"
 #include "Graph.h"
 
+using namespace std;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -49,7 +51,7 @@ private:
     Ui::MainWindow *ui;
     Graph socialGraph;
     DataStore dataStore;
-    std::vector<Account> accounts;
+    vector<Account> accounts;
     int nextUserId;
     int currentUserId;
     int viewedUserId;

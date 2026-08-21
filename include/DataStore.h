@@ -6,22 +6,24 @@
 
 #include "Graph.h"
 
+using namespace std;
+
 struct Account {
-    std::string username;
-    std::string password;
-    std::string uid;
+    string username;
+    string password;
+    string uid;
     int userId;
 };
 
 class DataStore {
 public:
-    explicit DataStore(const std::string& fileName = "Persistence/social_network.txt");
+    explicit DataStore(const string& fileName = "Persistence/social_network.txt");
 
-    bool load(Graph& socialGraph, std::vector<Account>& accounts, int& nextUserId) const;
-    bool save(const Graph& socialGraph, const std::vector<Account>& accounts) const;
+    bool load(Graph& socialGraph, vector<Account>& accounts, int& nextUserId) const;
+    bool save(const Graph& socialGraph, const vector<Account>& accounts) const;
 
 private:
-    std::string fileName;
+    string fileName;
 };
 
 #endif // DATASTORE_H

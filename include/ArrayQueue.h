@@ -1,6 +1,7 @@
 #ifndef ARRAYQUEUE_H
 #define ARRAYQUEUE_H
 
+using namespace std;
 
 template <typename T>
 class ArrayQueue {

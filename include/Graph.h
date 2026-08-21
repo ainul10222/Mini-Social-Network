@@ -5,6 +5,8 @@
 #include "List.h"
 #include "LinkedList.h"
 
+using namespace std;
+
 class Graph {
 public:
     explicit Graph(int initialCapacity = 4);

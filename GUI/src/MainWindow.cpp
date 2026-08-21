@@ -4,6 +4,8 @@
 #include <QHBoxLayout>
 #include <QPixmap>
 
+using namespace std;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), nextUserId(1), currentUserId(-1), viewedUserId(-1), searchMode(SearchMode::None), userCompleter(nullptr), userSuggestionModel(nullptr), profileViewLabel(nullptr), profileFriendButton(nullptr), headerWidget(nullptr), headerAvatarLabel(nullptr), headerAccountLabel(nullptr) {
     ui->setupUi(this);
@@ -243,7 +245,7 @@ void MainWindow::onRegister() {
     }
     const int userId = nextUserId++;
     accounts.push_back({username.toStdString(), password.toStdString(), uid.toStdString(), userId});
-    std::string name = displayName.toStdString();
+    string name = displayName.toStdString();
     socialGraph.addUser(userId, name.c_str());
     dataStore.save(socialGraph, accounts);
     showStatus("Registration successful. You can now log in.");

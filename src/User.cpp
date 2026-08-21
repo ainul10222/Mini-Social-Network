@@ -1,6 +1,7 @@
 #include "User.h"
 #include <cstring>
 
+using namespace std;
 
 User::User() : id(-1), name(nullptr) {
     name = new char[1];
@@ -52,7 +53,7 @@ bool User::operator<(const User& other) const {
     return id < other.id;
 }
 
-std::ostream& operator<<(std::ostream& out, const User& user) {
+ostream& operator<<(ostream& out, const User& user) {
     out << "[" << user.id << "] " << user.name;
     return out;
 }

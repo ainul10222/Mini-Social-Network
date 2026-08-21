@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 class User {
 public:
     User();
@@ -16,7 +18,7 @@ public:
 
     bool operator==(const User& other) const;
     bool operator<(const User& other) const;
-    friend std::ostream& operator<<(std::ostream& out, const User& user);
+    friend ostream& operator<<(ostream& out, const User& user);
 
 private:
     int id;
