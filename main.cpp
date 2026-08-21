@@ -253,9 +253,9 @@ int main()
     cout << "Are Alice and Bob friends now? ";
 
     if (socialNetwork.areFriends(1, 2))
-        cout << "YES (ERROR)" << endl;
+        cout << "YES" << endl;
     else
-        cout << "NO (CORRECT)" << endl;
+        cout << "NO" << endl;
 
 
     // Restore Alice-Bob so the network remains complete
