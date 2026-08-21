@@ -1,19 +1,17 @@
 # Mini Social Network
 
-A beginner-friendly social network simulation built with **C++17**. The project models users and friendships as an undirected graph and provides both a terminal-based interface and an optional desktop GUI powered by **Qt 5**.
+A beginner-friendly social network simulation built with **C++17**. The project models users and friendships as an undirected graph and provides a desktop GUI powered by **Qt 5**.
 
 ## Project Status
 
-The core social-network engine is implemented and can be run from the terminal. The Qt5 interface provides screens for registration, login, account deletion, profiles, friendships, searches, graph traversal, mutual friends, and friend suggestions.
+The Qt5 interface provides screens for registration, login, account deletion, profiles, friendships, searches, graph traversal, mutual friends, and friend suggestions.
 
 ## Project Structure
 
 ```text
 Mini-Social-Network/
-├── main.cpp                         # Terminal application entry point
 ├── CMakeLists.txt                   # CMake build configuration
 ├── README.md                        # Project documentation
-├── MiniSocialNetwork_Roadmap.md     # Development roadmap
 ├── include/
 │   ├── ArrayQueue.h                 # Dynamic queue implementation
 │   ├── ArrayStack.h                 # Dynamic stack implementation
@@ -32,8 +30,8 @@ Mini-Social-Network/
 │   ├── resources/resources.qrc      # GUI resources
 │   └── src/                         # Qt application sources
 └── Persistence/
-	├── social_network.txt           # Terminal/GUI text persistence file
-	└── social_network.json          # Project data file
+	├── social_network.txt           # GUI text persistence file
+	└── social_network.txt           # Saved GUI data
 ```
 
 ## Features
@@ -61,10 +59,9 @@ Mini-Social-Network/
 - Mutual-friend detection
 - Friend suggestions based on graph connections
 
-### Two Interfaces
+### Desktop Interface
 
-- **Terminal mode:** interactive text menus in the console
-- **Qt5 GUI mode:** desktop interface with forms, profile views, search, and social actions
+- **Qt5 GUI:** desktop interface with forms, profile views, search, and social actions
 
 ## Technology Stack
 
@@ -74,63 +71,7 @@ Mini-Social-Network/
 - Custom dynamic arrays, lists, stacks, queues, and linked lists
 - Text-file persistence in `Persistence/social_network.txt`
 
-## Quick Start: Terminal Version
-
-### Prerequisites
-
-Install:
-
-- A C++17 compiler
-- CMake
-- Ninja or Make
-
-### Windows with MSYS2 UCRT64
-
-Open the **MSYS2 UCRT64** terminal and install the compiler and build tools:
-
-```bash
-pacman -S --needed mingw-w64-ucrt-x86_64-toolchain \
-	mingw-w64-ucrt-x86_64-cmake \
-	mingw-w64-ucrt-x86_64-ninja
-```
-
-Move to the project directory. Adjust the path if your project is stored elsewhere:
-
-```bash
-cd /d/Projects/C++/Mini-Social-Network
-```
-
-Configure and build the terminal version:
-
-```bash
-cmake -S . -B build-msys2 -G "MinGW Makefiles" -DBUILD_GUI=OFF
-cmake --build build-msys2
-```
-
-Run it from the project directory so the persistence path works correctly:
-
-```bash
-./build-msys2/MiniSocialNetwork.exe
-```
-
-If you configured the project inside the `build` directory instead, run:
-
-```bash
-cd build
-./MiniSocialNetwork.exe
-```
-
-### Windows with Visual Studio or PowerShell
-
-From the project directory:
-
-```powershell
-cmake -S . -B build -DBUILD_GUI=OFF
-cmake --build build
-.\build\MiniSocialNetwork.exe
-```
-
-## Quick Start: Qt5 GUI Version
+## Quick Start
 
 ### Prerequisites
 
@@ -144,7 +85,7 @@ Configure and build the GUI version:
 
 ```bash
 cd /d/Projects/C++/Mini-Social-Network
-cmake -S . -B build-gui-msys2 -G "MinGW Makefiles" -DBUILD_GUI=ON
+cmake -S . -B build-gui-msys2 -G "MinGW Makefiles"
 cmake --build build-gui-msys2
 ```
 
@@ -154,48 +95,7 @@ Run the GUI:
 ./build-gui-msys2/MiniSocialNetwork.exe
 ```
 
-The GUI build uses `Qt5::Widgets`, as configured in `CMakeLists.txt`.
-
-## Terminal Menu
-
-After launching the terminal version, the application provides:
-
-```text
-1. Register
-2. Login
-3. Delete account
-0. Exit
-```
-
-After logging in:
-
-```text
-1. Add friend
-2. Remove friend
-3. Show my friends
-4. Find users
-5. Run BFS from me
-6. Run DFS from me
-7. Show mutual friends
-8. Suggest friends
-9. Logout
-0. Exit
-```
-
-## Example Workflow
-
-```text
-1. Register
-   Username: alice
-   Display name: Alice
-   UID: alice01
-
-2. Register another user
-3. Log in as Alice
-4. Add the other user as a friend
-5. Show friends or run BFS/DFS
-6. Search by display name or UID
-```
+The application uses `Qt5::Widgets`, as configured in `CMakeLists.txt`.
 
 Account and friendship changes are saved to:
 
@@ -244,7 +144,7 @@ The Qt5 window acts as a user interface layer around the existing `Graph` and `D
 
 1. Create a feature branch.
 2. Keep core graph logic independent from GUI code.
-3. Build both terminal and GUI modes when changing shared classes.
+3. Build the GUI when changing shared classes.
 4. Test account, friendship, persistence, BFS, DFS, and suggestion behavior.
 5. Open a pull request with a clear description of the change.
 
