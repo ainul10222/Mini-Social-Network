@@ -46,4 +46,4 @@ private:
     void destroy();
 };
 
-#endif // GRAPH_H
+#endif

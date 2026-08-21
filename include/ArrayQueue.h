@@ -77,4 +77,4 @@ private:
     }
 };
 
-#endif // ARRAYQUEUE_H
+#endif

@@ -104,8 +104,6 @@ public:
     int size() const { return count; }
     bool isEmpty() const { return count == 0; }
 
-    // Converts to an array-based List<T> so callers (Graph, main.cpp) can
-    // hand results back / index into them without ever seeing a Node.
     List<T> toList() const {
         List<T> result(count > 0 ? count : 1);
         Node* cur = head;
@@ -133,4 +131,4 @@ ostream& operator<<(ostream& out, const LinkedList<U>& list) {
     return out;
 }
 
-#endif // LINKEDLIST_H
+#endif

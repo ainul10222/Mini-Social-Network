@@ -17,8 +17,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-// Main application window. Purely a shell around Graph —
-// should contain no graph algorithm logic of its own.
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -75,4 +73,4 @@ private:
     void showUserProfile(int userId);
 };
 
-#endif // MAINWINDOW_H
+#endif

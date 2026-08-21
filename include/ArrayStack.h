@@ -68,4 +68,4 @@ private:
     }
 };
 
-#endif // ARRAYSTACK_H
+#endif

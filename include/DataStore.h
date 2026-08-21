@@ -26,4 +26,4 @@ private:
     string fileName;
 };
 
-#endif // DATASTORE_H
+#endif
