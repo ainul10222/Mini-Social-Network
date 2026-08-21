@@ -1,0 +1,8 @@
+ACCOUNTS
+"Ainul" "123456" "ainul10222" 1
+"Ariful" "0987654321" "arif252" 2
+USERS
+1 "Ainul Huque"
+2 "Ariful Islam"
+FRIENDSHIPS
+1 2

@@ -13,14 +13,20 @@ set(SRC
     main.cpp
     src/User.cpp
     src/Graph.cpp
+    src/DataStore.cpp
 )
 
 if(BUILD_GUI)
+    set(CMAKE_AUTOMOC ON)
     find_package(Qt5 COMPONENTS Widgets REQUIRED)
+    list(REMOVE_ITEM SRC main.cpp)
+    list(APPEND SRC GUI/src/main.cpp)
     set(UI_FILES GUI/forms/MainWindow.ui)
     qt5_wrap_ui(UIC_HEADERS ${UI_FILES})
-    list(APPEND SRC GUI/src/MainWindow.cpp ${UIC_HEADERS})
+    qt5_add_resources(QRC_SOURCES GUI/resources/resources.qrc)
+    list(APPEND SRC GUI/src/MainWindow.cpp GUI/include/MainWindow.h ${UIC_HEADERS} ${QRC_SOURCES})
     add_executable(MiniSocialNetwork ${SRC})
+    target_include_directories(MiniSocialNetwork PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
     target_link_libraries(MiniSocialNetwork Qt5::Widgets)
 else()
     add_executable(MiniSocialNetwork ${SRC})

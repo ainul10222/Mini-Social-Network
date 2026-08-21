@@ -2,8 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QCompleter>
+#include <QLabel>
+#include <QPushButton>
+#include <QStringListModel>
+#include <vector>
+
+#include "DataStore.h"
 #include "Graph.h"
-using namespace std;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,36 +25,52 @@ public:
     ~MainWindow();
 
 private slots:
-    // Reads name/id fields, calls socialGraph.addUser(...)
-    void onAddUser();
-
-    // Reads two selected user ids, calls socialGraph.addFriendship(...)
-    void onAddFriendship();
-
-    // Reads selected user id, calls socialGraph.getFriends(...),
-    // displays the result in a list widget
+    void onContinue();
+    void onOpenLogin();
+    void onOpenRegister();
+    void onOpenDelete();
+    void onBackToAccess();
+    void onExit();
+    void onLogin();
+    void onRegister();
+    void onDeleteAccount();
+    void onProfileFriendAction();
     void onShowFriends();
-
-    // Calls socialGraph.bfsTraversal(...), displays the order
+    void onSearchUser();
     void onRunBFS();
-
-    // Calls socialGraph.dfsTraversal(...), displays the order
     void onRunDFS();
-
-    // Calls socialGraph.getMutualFriends(...), displays the result
     void onShowMutualFriends();
-
-    // Calls socialGraph.suggestFriends(...), displays the result
     void onSuggestFriends();
+    void onLogout();
 
 private:
+    enum class SearchMode { None, SearchUser };
+
     Ui::MainWindow *ui;
     Graph socialGraph;
+    DataStore dataStore;
+    std::vector<Account> accounts;
+    int nextUserId;
+    int currentUserId;
+    int viewedUserId;
+    SearchMode searchMode;
+    QCompleter* userCompleter;
+    QStringListModel* userSuggestionModel;
+    QLabel* profileViewLabel;
+    QPushButton* profileFriendButton;
+    QWidget* headerWidget;
+    QLabel* headerAvatarLabel;
+    QLabel* headerAccountLabel;
 
-    // Repopulates any user-list dropdowns/widgets from
-    // socialGraph.getAllUsers() — call this after every
-    // add/remove operation so the UI stays in sync.
-    void refreshUserList();
+    int findUserId(const QString& searchTerm) const;
+    const Account* findAccount(const QString& username) const;
+    const Account* findAccountByUserId(int userId) const;
+    void showStatus(const QString& message);
+    void showIds(const QString& label, const List<int>& ids);
+    void openSearchMode(SearchMode mode);
+    void closeSearchMode();
+    void refreshUserSuggestions();
+    void showUserProfile(int userId);
 };
 
 #endif // MAINWINDOW_H

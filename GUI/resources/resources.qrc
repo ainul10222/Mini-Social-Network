@@ -1,8 +1,6 @@
-<!--
-<!-- TODO: register any icons/images you use (optional).
-     Skeleton, empty for now: -->
 <RCC>
-  <qresource prefix="/icons">
+  <qresource prefix="/branding">
+    <file alias="logo.jpg">../../resources/mini_social_media_logo.jpg</file>
+    <file alias="background.jpg">../../resources/backgroundpicture.jpg</file>
   </qresource>
 </RCC>
--->
